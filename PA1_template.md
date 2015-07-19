@@ -1,9 +1,6 @@
----
-title: "Reproducible Research Peer Assignment 1"
-author: "Prasad Kodibagkar"
-date: "July 19, 2015"
-output: html_document
----
+# Reproducible Research Peer Assignment 1
+Prasad Kodibagkar  
+July 19, 2015  
 
 This assignment makes use of data from a personal activity monitoring device. This device collects data at 5 minute intervals through out the day. The data consists of two months of data from an anonymous individual collected during the months of October and November, 2012 and include the number of steps taken in 5 minute intervals each day.
 
@@ -30,6 +27,22 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 
 # load libraries
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 library(lattice)
 ```
 
@@ -78,7 +91,7 @@ Plot a histogram for the daily steps
 hist(activitySummaryByDate$daily_steps, col="red")
 ```
 
-![plot of chunk histdailysteps ](figure/histdailysteps -1.png) 
+![](PA1_template_files/figure-html/histdailysteps -1.png) 
 
 Calculate the mean value for daily steps
 
@@ -142,7 +155,7 @@ axis(1, at= activitySummaryByInterval[activitySummaryByInterval$avg_steps == max
      col.axis="red")
 ```
 
-![plot of chunk plotavgstpsbyinterval](figure/plotavgstpsbyinterval-1.png) 
+![](PA1_template_files/figure-html/plotavgstpsbyinterval-1.png) 
 ### Imputing missing values
 
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
@@ -192,7 +205,7 @@ Plot a histogram for the daily steps
 hist(imputedActivitySummary$daily_steps, col="red")
 ```
 
-![plot of chunk histdailysteps](figure/histdailysteps-1.png) 
+![](PA1_template_files/figure-html/histdailysteps-1.png) 
 Calculate the mean value for daily steps
 
 ```r
@@ -234,4 +247,4 @@ Panel Plot of average steps by interval to compare weekday and weekend activity
 xyplot(avg_steps ~ interval | day_of_week, data = imputedActivitySummaryByWeekday,layout = c(1, 2),type="l") ## Plot with 2 panels
 ```
 
-![plot of chunk panelplot](figure/panelplot-1.png) 
+![](PA1_template_files/figure-html/panelplot-1.png) 
