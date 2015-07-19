@@ -22,8 +22,8 @@ interval: Identifier for the 5-minute interval in which measurement was taken
   
 The dataset is stored in a comma-separated-value (CSV) file and there are a total of 17,568 observations in this dataset.
 
-```{r loadlibraries, echo=TRUE}
 
+```r
 # PA1_template.R
 ##
 ## 
@@ -31,11 +31,11 @@ The dataset is stored in a comma-separated-value (CSV) file and there are a tota
 # load libraries
 library(dplyr)
 library(lattice)
-
 ```
 
 Initialize common variables
-```{r initvariables , echo=TRUE}
+
+```r
 srcDir <- "/Users/prasadkodibagkar/Documents/Data Science/workspace/RepData_PeerAssessment1"
 dataDir <- "/Users/prasadkodibagkar/Documents/Data Science/workspace/RepData_PeerAssessment1"
 activityDataFile <- "activity.csv"
@@ -43,20 +43,29 @@ activityDataFile <- "activity.csv"
 
 ### Loading and preprocessing the data
 Load activity File and filter missing values
-```{r loadandfilterdata , echo=TRUE}
 
+```r
 activityDF <- read.csv(paste(dataDir,"/", activityDataFile,sep = ""))
 
 str(activityDF)
+```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
 
+```r
 # Filter the observations with missing values
 
 cleanActivityDF <- activityDF[!is.na(activityDF$steps),]
 ```
 
 Summarize Steps by day
-```{r summarizestepsbyday, echo=TRUE}
+
+```r
 activitySummaryByDate <- cleanActivityDF %>%
     group_by(date) %>%
     summarize(daily_steps = sum(steps))
@@ -64,17 +73,30 @@ activitySummaryByDate <- cleanActivityDF %>%
 
 ### What is mean total number of steps taken per day?
 Plot a histogram for the daily steps  
-```{r histdailysteps , echo=TRUE}
+
+```r
 hist(activitySummaryByDate$daily_steps, col="red")
 ```
 
+![plot of chunk histdailysteps ](figure/histdailysteps -1.png) 
+
 Calculate the mean value for daily steps
-```{r meandailysteps, echo=TRUE}
+
+```r
 mean(activitySummaryByDate$daily_steps)
 ```
+
+```
+## [1] 10766.19
+```
 Calculate the median value for daily steps
-```{r mediandailysteps, echo=TRUE}
+
+```r
 median(activitySummaryByDate$daily_steps)
+```
+
+```
+## [1] 10765
 ```
 
 ### What is the average daily activity pattern?
@@ -83,22 +105,34 @@ Create a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) an
 averaged across all days (y-axis)
 
 Summarize Steps by day
-```{r summarizestepsbyinterval, echo=TRUE}
+
+```r
 activitySummaryByInterval <- cleanActivityDF %>%
     group_by(interval) %>%
     summarize(avg_steps = mean(steps))
 ```
 
 Calculate the max average steps
-```{r maxavgsteps, echo=TRUE}
+
+```r
 max(activitySummaryByInterval$avg_steps)
 ```
+
+```
+## [1] 206.1698
+```
 Calculate the interval with the max average steps
-```{r intervalwithmaxabgsteps, echo=TRUE}
+
+```r
 activitySummaryByInterval[activitySummaryByInterval$avg_steps == max(activitySummaryByInterval$avg_steps),]$interval
 ```
+
+```
+## [1] 835
+```
 Plot the average steps by interval and add a line showing the interval with the max average steps
-```{r plotavgstpsbyinterval, echo=TRUE}
+
+```r
 plot(activitySummaryByInterval$interval, activitySummaryByInterval$avg_steps,type="l", 
      xlab= "Interval", ylab= "Average Steps", col="black" , lwd=1)
 
@@ -107,27 +141,37 @@ abline(v=activitySummaryByInterval[activitySummaryByInterval$avg_steps == max(ac
 axis(1, at= activitySummaryByInterval[activitySummaryByInterval$avg_steps == max(activitySummaryByInterval$avg_steps),]$interval,
      col.axis="red")
 ```
+
+![plot of chunk plotavgstpsbyinterval](figure/plotavgstpsbyinterval-1.png) 
 ### Imputing missing values
 
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
-```{r totalmissingvalues, echo=TRUE}
+
+```r
 nrow(activityDF[is.na(activityDF$steps),])
 ```
 
+```
+## [1] 2304
+```
+
 Copy and create an Imputed Data frame
-```{r imputeddata, echo=TRUE}
+
+```r
 imputedActivityDF <- activityDF
 ```
 Fill missing values in the dataset mean steps for that 5 minute interval 
 
 Define function to get mean steps for a specific 5 minute interval
-```{r funcmeansteps, echo=TRUE}
+
+```r
 getAverageStepsForInterval <- function(intvl){
     return(activitySummaryByInterval[activitySummaryByInterval$interval==intvl,][["avg_steps"]])
 }
 ```
 Iterate and set missing values with mean steps for that interval
-```{r setmissingvalues, echo=TRUE}
+
+```r
 for ( i in 1:nrow(imputedActivityDF))
 {
     if (is.na(imputedActivityDF[i,"steps"])) {
@@ -136,39 +180,58 @@ for ( i in 1:nrow(imputedActivityDF))
 }
 ```
 Summarize Steps by day
-```{r summimputedstepsbyday, echo=TRUE}
+
+```r
 imputedActivitySummary <- imputedActivityDF %>%
     group_by(date) %>%
     summarize(daily_steps = sum(steps))
 ```
 Plot a histogram for the daily steps
-```{r histdailysteps, echo=TRUE}
+
+```r
 hist(imputedActivitySummary$daily_steps, col="red")
 ```
+
+![plot of chunk histdailysteps](figure/histdailysteps-1.png) 
 Calculate the mean value for daily steps
-```{r imputedmeandailysteps, echo=TRUE}
+
+```r
 mean(imputedActivitySummary$daily_steps)
 ```
+
+```
+## [1] 10766.19
+```
 Calculate the median value for daily steps
-```{r imputedmediandailysteps, echo=TRUE}
+
+```r
 median(imputedActivitySummary$daily_steps)
+```
+
+```
+## [1] 10766.19
 ```
 As it can be seen from the mean and median values, imputing the missing values has made the mean and median values to be equal.
 
 ### Are there differences in activity patterns between weekdays and weekends?
 
 Add a factor variable with two levels -- "weekday" and "weekend"
-```{r calcweekday, echo=TRUE}
+
+```r
 imputedActivityDF <- imputedActivityDF %>%
     transform(day_of_week = ifelse(as.numeric(format(as.Date(date),"%w")) <=5 ,"weekday","weekend"))
 ```
 Summarize Steps by weekdays and interval
-```{r sumbyweekday, echo=TRUE}
+
+```r
 imputedActivitySummaryByWeekday <- imputedActivityDF %>%
     group_by(day_of_week,interval) %>%
     summarize(avg_steps = mean(steps))
 ```
 Panel Plot of average steps by interval to compare weekday and weekend activity
-```{r panelplot, echo=TRUE}
+
+```r
 xyplot(avg_steps ~ interval | day_of_week, data = imputedActivitySummaryByWeekday,layout = c(1, 2),type="l") ## Plot with 2 panels
 ```
+
+![plot of chunk panelplot](figure/panelplot-1.png) 
