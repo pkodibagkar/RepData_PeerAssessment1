@@ -28,7 +28,7 @@ activitySummaryByDate <- cleanActivityDF %>%
     summarize(daily_steps = sum(steps))
 
 # Plot a histogram for the daily steps
-hist(activitySummaryByDate$daily_steps, col="red")
+hist(activitySummaryByDate$daily_steps, col="red",xlab="Total Steps", main="Total number of steps by day" )
 
 # Calculate the mean value for daily steps
 mean(activitySummaryByDate$daily_steps)
@@ -54,7 +54,7 @@ maxInterval <- activitySummaryByInterval[activitySummaryByInterval$avg_steps == 
 # Plot the average steps by interval and add a line showing the interval with the max average steps
 
 plot(activitySummaryByInterval$interval, activitySummaryByInterval$avg_steps,type="l", 
-     xlab= "Interval", ylab= "Average Steps", col="black" , lwd=1)
+     xlab= "Interval", ylab= "Average Steps",main="Average Steps By Interval", col="black" , lwd=1)
 
 abline(v=maxInterval, h=maxAvgSteps, col="red")
 axis(1, at= maxInterval, col.axis="red")
@@ -88,7 +88,7 @@ imputedActivitySummary <- imputedActivityDF %>%
     summarize(daily_steps = sum(steps))
 
 # Plot a histogram for the daily steps
-hist(imputedActivitySummary$daily_steps, col="red")
+hist(imputedActivitySummary$daily_steps, col="red",xlab="Total Steps", main="Total number of steps by day" )
 
 # Calculate the mean value for daily steps
 mean(imputedActivitySummary$daily_steps)
@@ -112,7 +112,8 @@ imputedActivitySummaryByWeekday <- imputedActivityDF %>%
 
 # Panel Plot of average steps by interval to compare weekday and weekend activity
 
-p <- xyplot(avg_steps ~ interval | day_of_week, data = imputedActivitySummaryByWeekday,layout = c(1, 2),type="l") ## Plot with 2 panels
+p <- xyplot(avg_steps ~ interval | day_of_week, data = imputedActivitySummaryByWeekday,layout = c(1, 2),
+            type="l",xlab="Interval",ylab="Number of steps",main="Comparison between weekend and weekday activity") 
 print(p)
 
 #mutate(day_of_week = ifelse(as.numeric(as.Date(date,format="%w")) > )

@@ -88,12 +88,13 @@ activitySummaryByDate <- cleanActivityDF %>%
 Plot a histogram for the daily steps  
 
 ```r
-hist(activitySummaryByDate$daily_steps, col="red")
+hist(activitySummaryByDate$daily_steps, col="red",xlab="Total Steps", main="Total number of steps by day" )
 ```
 
 ![](PA1_template_files/figure-html/histdailysteps -1.png) 
 
-Calculate the mean value for daily steps
+  Calculate the mean value for daily steps
+
 
 ```r
 mean(activitySummaryByDate$daily_steps)
@@ -102,7 +103,9 @@ mean(activitySummaryByDate$daily_steps)
 ```
 ## [1] 10766.19
 ```
+
 Calculate the median value for daily steps
+
 
 ```r
 median(activitySummaryByDate$daily_steps)
@@ -147,7 +150,7 @@ Plot the average steps by interval and add a line showing the interval with the 
 
 ```r
 plot(activitySummaryByInterval$interval, activitySummaryByInterval$avg_steps,type="l", 
-     xlab= "Interval", ylab= "Average Steps", col="black" , lwd=1)
+     xlab= "Interval", ylab= "Average Steps", main="Average Steps By Interval", col="black" , lwd=1)
 
 abline(v=activitySummaryByInterval[activitySummaryByInterval$avg_steps == max(activitySummaryByInterval$avg_steps),]$interval, 
        h=max(activitySummaryByInterval$avg_steps), col="red")
@@ -156,6 +159,7 @@ axis(1, at= activitySummaryByInterval[activitySummaryByInterval$avg_steps == max
 ```
 
 ![](PA1_template_files/figure-html/plotavgstpsbyinterval-1.png) 
+
 ### Imputing missing values
 
 Calculate and report the total number of missing values in the dataset (i.e. the total number of rows with NAs)
@@ -192,20 +196,24 @@ for ( i in 1:nrow(imputedActivityDF))
     }
 }
 ```
+
 Summarize Steps by day
+
 
 ```r
 imputedActivitySummary <- imputedActivityDF %>%
     group_by(date) %>%
     summarize(daily_steps = sum(steps))
 ```
+
 Plot a histogram for the daily steps
 
 ```r
-hist(imputedActivitySummary$daily_steps, col="red")
+hist(imputedActivitySummary$daily_steps, col="red",xlab="Total Steps", main="Total number of steps by day" )
 ```
 
 ![](PA1_template_files/figure-html/histdailysteps-1.png) 
+  
 Calculate the mean value for daily steps
 
 ```r
@@ -244,7 +252,8 @@ imputedActivitySummaryByWeekday <- imputedActivityDF %>%
 Panel Plot of average steps by interval to compare weekday and weekend activity
 
 ```r
-xyplot(avg_steps ~ interval | day_of_week, data = imputedActivitySummaryByWeekday,layout = c(1, 2),type="l") ## Plot with 2 panels
+xyplot(avg_steps ~ interval | day_of_week, data = imputedActivitySummaryByWeekday,layout = c(1,2),type="l"
+       ,xlab="Interval",ylab="Number of steps",main="Comparison between weekend and weekday activity")
 ```
 
 ![](PA1_template_files/figure-html/panelplot-1.png) 
